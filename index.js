@@ -10,7 +10,8 @@ const io = new Server(server);
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+    res.sendStatus(200)
+    res.sendFile(__dirname + '/index.html');
 });
 
 
