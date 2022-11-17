@@ -14,8 +14,8 @@ app.get('/', (req, res) => {
 });
 
 
-server.listen(80, () => {
-  console.log('listening on *:80');
+server.listen(3001, () => {
+  console.log('listening on *:3001');
 });
 
 io.on('connection', (socket) => {
