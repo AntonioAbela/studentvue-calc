@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+      .colored-toast.swal2-icon-success {
+        background-color: #a5dc86 !important;
+      }
+      
+      .colored-toast.swal2-icon-error {
+        background-color: #f27474 !important;
+      }
+      
+      .colored-toast.swal2-icon-warning {
+        background-color: #f8bb86 !important;
+      }
+      
+      .colored-toast.swal2-icon-info {
+        background-color: #3fc3ee !important;
+      }
+      
+      .colored-toast.swal2-icon-question {
+        background-color: #87adbd !important;
+      }
+      
+      .colored-toast .swal2-title {
+        color: white;
+      }
+      
+      .colored-toast .swal2-close {
+        color: white;
+      }
+      
+      .colored-toast .swal2-html-container {
+        color: white;
+      }
+    </style>
+    <title>StudentVue Calculator</title>
+  </head>
+  <body>
+
+
+    <form id="form" action="">
+      <h1>Login</h1>
+      
+
+      <label for="user">Username</label>
+      <input id="user" placeholder="Username" autocomplete="off" autofocus="on"/>
+
+
+      <label for="pass">Password</label>
+      <input id="pass" placeholder="Password" type="password" autocomplete="off"/>
+
+      <label for="grade">Grade Wanted</label>
+      <select id="grade">
+        <option value="a">A</option>
+        <option value="b">B</option>
+        <option value="c">C</option>
+        <option value="d">D</option>
+      </select>
+
+      <img src="/images/question-mark.svg" alt="Question Mark" id="questionMark" width="30px">
+      <button class="invalid" id="submit">Submit</button>
+      <div class="toastTarget"></div>
+    </form>
+
+
+    <ul id="messages">
+      <li>Test1</li>
+      <li>Test1</li>
+      <li>Test1</li>
+      <li>Test1</li>
+      <li>Test1</li>
+    </ul>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    let socket = io()
+
+    
+    const form = document.getElementById('form')
+    const user = document.getElementById('user')
+    const pass = document.getElementById('pass')
+    const gradeWant = document.getElementById('grade')
+    const questionMark = document.getElementById('questionMark')
+    const submit = document.getElementById('submit')
+    const regex = /\d+%|-\d+%|\d.+%|-\d.+%/
+    let grades = {
+      a: 89.5,
+      b: 79.5,
+      c: 69.5,
+      d: 59.5
+  }
+    
+    
+    
+    questionMark.addEventListener('click', function(e) {
+      Swal.fire(
+        'Instructions',
+        'Please login with your StudentVue credentials.',
+        'question',
+      )
+    })
+
+
+    submit.addEventListener('mouseover', function(checkValid) {
+      if (user.value && pass.value != '') {
+        submit.classList.remove('valid','invalid')
+        submit.classList.add('valid')
+      } else {
+        submit.classList.remove('valid','invalid')
+        submit.classList.add('invalid')
+    }
+    })
+
+    form.addEventListener('submit', function(e) {
+    e.preventDefault()
+    if (user.value && pass.value && gradeWant.options[gradeWant.selectedIndex].value) {
+      socket.emit('getGrades', user.value, pass.value)
+      user.value = ''
+      pass.value = ''
+      messages.innerHTML = '';
+      messages.style.opacity = '0'
+      
+
+      Swal.fire({
+        title: 'Please wait...',
+        toast: true,
+        target: '.toastTarget',
+        customClass: {
+          popup: 'loading-toast',
+        }
+      })
+      Swal.showLoading()
+    } else {
+      Swal.fire({
+        toast: true,
+        title: 'Please enter all fields',
+        icon: 'error',
+        iconColor: 'white',
+        target: '.toastTarget',
+        timer: 1800,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        customClass: {
+          popup: 'colored-toast'
+        },
+      })
+    }
+  });
+/*
+    socket.on('getGrades', function(grades) {
+      let para = document.createElement('li')
+      para.textContent = grades
+      messages.appendChild(para)
+    })*/
+    socket.on("sucess", function(sucess) {
+      
+    })
+
+
+    socket.on("error", function(err) {
+      let error = err
+      Swal.close()
+      Swal.fire({
+        toast: true,
+        title: 'Invalid Username/Password',
+        icon: 'error',
+        iconColor: 'white',
+        target: '.toastTarget',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        customClass: {
+          popup: 'colored-toast'
+        },
+      })
+    })
+    
+    socket.on('sendClient', function(allGrades, classNamed) {
+        //computeLowestGrade(allGrades, grade)
+        
+        //console.log(allGrades, classNamed, grade)
+        computeLowestGrade(allGrades, classNamed)
+    })
+
+
+
+
+    function computeLowestGrade(allGrades, className) {
+      let grade = gradeWant.options[gradeWant.selectedIndex].value
+      let zero = 0;
+      for (let array = 0; array < allGrades.length; array++) {
+          if(allGrades[array] == 0) {zero++}
+      }
+      let gradeWanted = (allGrades.length - zero) * grades[grade] + grades[grade];
+      let totalCurrent = 0;
+      for (let i = 0; i < allGrades.length; i++) {
+              totalCurrent += parseInt(allGrades[i])
+      }
+      if (grade === 'a') {
+          //console.log('You need a ' + (gradeWanted - totalCurrent) + '% to get an ' + grade.toUpperCase() + ' in ' + className)
+          printGrades('You need a ' + (gradeWanted - totalCurrent) + '% to get an ' + grade.toUpperCase() + ' in ' + className /* ' ' + Math.round(totalCurrent/3)*/)
+  
+  
+      }
+      else {
+          //console.log('You need a ' + (gradeWanted - totalCurrent) + '% to get a ' + grade.toUpperCase() + ' in ' + className)
+          printGrades('You need a ' + (gradeWanted - totalCurrent) + '% to get a ' + grade.toUpperCase() + ' in ' + className)
+      }
+  }
+
+
+    function printGrades(arg) {
+      form.style.left = '15%'
+      if (window.matchMedia("(max-width: 1400px)").matches) {
+      form.style.opacity = '0%'
+      }
+      setTimeout(function() {
+        let msg = document.createElement('li')
+        Swal.close()
+        msg.classList.add('noBullet')
+        let numberLoc = arg.search(regex)
+        let percentLoc = arg.search('%')
+        //console.log(numberLoc)
+        let percent = arg.substring(numberLoc, percentLoc + 1)
+        let newarg = arg.replace(regex, '<span class="bold">' + percent + '</span>')
+        //console.log(newarg)
+        msg.innerHTML = newarg
+        messages.style.display = 'block'
+        messages.appendChild(msg)
+        //console.log(msg)
+        setTimeout(function(){messages.style.opacity = '1'}, 17)
+      }, 1560)
+    }
+
+    </script>
+  </body>
+</html>

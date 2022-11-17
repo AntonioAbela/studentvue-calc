@@ -1,0 +1,215 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+body {
+    font-family: 'Lato', sans-serif;
+    display: grid;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    color:rgb(38, 37, 37);
+    /*justify-content: center;
+    align-items: center;*/
+}
+
+input {
+    font-family: inherit;
+    display: block;
+    padding: 1rem;
+    width: 100%;
+    border-radius: 0.4rem;
+    border: 1px solid rgb(38, 37, 37);
+    margin: 0.5rem 0rem;
+}
+
+label {
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+h1 {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+}
+
+button {
+    font-family: inherit;
+}
+
+form {
+    /*width: 24vw;*/
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 22%;
+    opacity: 100;
+    margin: 0em 0em;
+    transition: all 1.5s ease-in-out;
+}
+
+button {
+    padding: 0.6rem 1rem;
+    float: right;
+    background-color: rgb(38, 37, 37);
+    border: none;
+    border-radius: 0.4rem;
+    color: white;
+    margin-top: 0.6rem;
+    transition: all 200ms ease-in-out;
+}
+
+.valid:hover {
+    background-color:#a5dc86;
+    cursor: pointer;
+}
+
+.invalid:hover {
+    background-color: #f27474;
+    cursor: not-allowed;
+}
+
+#messages {
+    display:none;
+    list-style-type: none;
+    vertical-align:middle;
+    padding: 0;
+    margin: 0;
+    width: 50%;
+    position: absolute;
+    left: 65%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.15em;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+#messages > li {
+    padding: 0.9rem 1rem; 
+}
+
+li:first-child {
+    margin-top: 0rem !important;
+}
+
+li:last-child {
+    margin-bottom: 0rem !important;
+}
+
+.toastTarget {
+    width: 60vw;
+    height: 10vh;
+    position: absolute;
+    left: 50%;
+    top: 120%;
+    transform: translate(-50%, -50%);
+    transition: all 1.5s ease-in-out;
+    /*background-color:black;*/
+}
+
+#questionMark {
+    margin-top: 0.6rem;
+}
+
+#questionMark:hover {
+    cursor: pointer;
+}
+
+#grade {
+    display: block;
+    margin: 0.5rem 0rem;
+    padding: 0.5rem;
+    width: 100%;
+    font-family: inherit;
+    color: rgb(38, 37, 37);
+    border: 1px solid rgb(38, 37, 37);
+    border-radius: 0.4rem;
+}
+
+.bold {
+    font-weight: 900;
+}
+
+
+
+@media only screen and (max-width: 1400px) {
+
+    #messages {
+        /*display:none;*/
+        list-style-type: none;
+        vertical-align:middle;
+        padding: 0;
+        margin: 0;
+        width: 50%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.15em;
+        opacity: 100;
+        transition: opacity 0.5s ease-in-out;
+    }
+    #messages > li {
+        padding: 0.9rem 1rem; 
+    }
+    
+    form {
+        width: 30%;
+    }
+}
+@media only screen and (max-width: 1200px) {
+    
+    #messages {
+        width: 80%;
+        text-align: center;
+    }
+
+    form {
+        width: 35%;
+    }
+
+    .toastTarget {
+        width: 80vw;
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+   
+
+
+    #messages {
+        width: 90%;
+    }
+    
+    form {
+        width: 40%;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+
+    form {
+        width: 60%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+
+    form {
+        width: 80%;
+    }
+
+    .toastTarget {
+        width:95vw;
+    }
+}
+
