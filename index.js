@@ -10,13 +10,14 @@ const io = new Server(server);
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
     res.sendStatus(200)
-    res.sendFile(index.html);
 });
 
 
 server.listen(3001, () => {
-  console.log('listening on *:3001');
+    console.log(__dirname)
+    console.log('listening on *:3001');
 });
 
 io.on('connection', (socket) => {
