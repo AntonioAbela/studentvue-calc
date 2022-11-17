@@ -11,8 +11,12 @@ app.use(express.static('public'));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
-    res.sendStatus(200)
+   // res.sendStatus(200)
 });
+
+app.get('/health', (req,res) => {
+    res.sendStatus(200)
+})
 
 
 server.listen(3001, () => {
