@@ -67,7 +67,8 @@ function getGrades(url, username, password, reportingPeriod)  {
 
 
 function callGrades() { 
-    for (let i = 0; i < 7; i++) {
+    number_courses = mpObject[0]['Gradebook']['Courses']['Course'].length
+    for (let i = 0; i < number_courses; i++) {
         for (let j = 0; j <= 2; j++) {
             
             try {
